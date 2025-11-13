@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Student {
+  id              String        @id @default(cuid())
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  parentName      String?
+  parentEmail     String?
+  parentPhone     String?
+  hourlyRate      Float
+  grade           String?
+  subject         String?
+  notes           String?
+  active          Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  sessions        Session[]
+  invoices        Invoice[]
+  workReviews     WorkReview[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  studentId   String
+  date        DateTime
+  duration    Float    // in hours
+  subject     String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  invoiceId   String?
+  invoice     Invoice? @relation(fields: [invoiceId], references: [id])
+
+  @@index([studentId])
+  @@index([date])
+}
+
+model Invoice {
+  id              String   @id @default(cuid())
+  studentId       String
+  invoiceNumber   String   @unique
+  month           Int      // 1-12
+  year            Int
+  totalHours      Float
+  hourlyRate      Float
+  totalAmount     Float
+  status          String   @default("pending") // pending, sent, paid
+  sentAt          DateTime?
+  paidAt          DateTime?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  sessions        Session[]
+
+  @@index([studentId])
+  @@index([month, year])
+}
+
+model WorkReview {
+  id          String   @id @default(cuid())
+  studentId   String
+  date        DateTime @default(now())
+  imageUrl    String?  // path to uploaded image
+  description String?
+  aiAnalysis  String?  // AI-generated analysis
+  tutorNotes  String?  // tutor's additional notes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([date])
+}
