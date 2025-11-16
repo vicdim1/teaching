@@ -79,17 +79,28 @@ export default function WorkReviewsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen relative">
+      {/* Background Image - Creative/Artistic Theme */}
+      <div className="fixed inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=1920&q=80"
+          alt="Art and Creativity"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-blue-900/60 to-pink-900/60"></div>
+      </div>
+
+      <div className="relative z-10 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Work Reviews</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-white drop-shadow-lg">Work Reviews</h1>
+          <p className="mt-2 text-purple-50 drop-shadow">
             Upload and analyze student work with AI assistance.
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 transition-all"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Work Review
@@ -120,9 +131,9 @@ export default function WorkReviewsPage() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {workReviews.length === 0 ? (
-          <div className="col-span-full text-center py-12 bg-white rounded-lg shadow">
-            <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <p className="mt-2 text-gray-500">
+          <div className="col-span-full text-center py-12 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-white/30">
+            <ImageIcon className="mx-auto h-12 w-12 text-slate-400" />
+            <p className="mt-2 text-slate-500">
               No work reviews yet. Upload student work to get started.
             </p>
           </div>
@@ -130,11 +141,11 @@ export default function WorkReviewsPage() {
           workReviews.map((review) => (
             <div
               key={review.id}
-              className="bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-white/95 backdrop-blur-md overflow-hidden shadow-2xl rounded-xl border border-white/30 hover:shadow-3xl hover:scale-[1.02] transition-all cursor-pointer"
               onClick={() => setSelectedReview(review)}
             >
               {review.imageUrl ? (
-                <div className="relative h-48 bg-gray-100">
+                <div className="relative h-48 bg-slate-100">
                   <Image
                     src={review.imageUrl}
                     alt="Student work"
@@ -143,13 +154,13 @@ export default function WorkReviewsPage() {
                   />
                 </div>
               ) : (
-                <div className="h-48 bg-gray-100 flex items-center justify-center">
-                  <ImageIcon className="h-12 w-12 text-gray-400" />
+                <div className="h-48 bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+                  <ImageIcon className="h-12 w-12 text-slate-400" />
                 </div>
               )}
               <div className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-medium text-gray-900">
+                  <h3 className="text-sm font-medium text-slate-900">
                     {review.student.firstName} {review.student.lastName}
                   </h3>
                   <button
@@ -157,21 +168,21 @@ export default function WorkReviewsPage() {
                       e.stopPropagation()
                       handleDelete(review.id)
                     }}
-                    className="text-red-600 hover:text-red-900"
+                    className="text-rose-600 hover:text-rose-900"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mb-2">
+                <p className="text-xs text-slate-500 mb-2">
                   {formatDate(review.date)}
                 </p>
                 {review.description && (
-                  <p className="text-sm text-gray-600 line-clamp-2">
+                  <p className="text-sm text-slate-600 line-clamp-2">
                     {review.description}
                   </p>
                 )}
                 {review.aiAnalysis && (
-                  <div className="mt-2 flex items-center text-xs text-blue-600">
+                  <div className="mt-2 flex items-center text-xs text-blue-700">
                     <Eye className="w-3 h-3 mr-1" />
                     AI Analysis Available
                   </div>
@@ -180,6 +191,7 @@ export default function WorkReviewsPage() {
             </div>
           ))
         )}
+      </div>
       </div>
     </div>
   )
@@ -235,15 +247,15 @@ function WorkReviewForm({
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+    <div className="fixed inset-0 bg-slate-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div className="relative top-20 mx-auto p-5 border border-slate-200 w-full max-w-2xl shadow-2xl rounded-xl bg-white">
         <div className="mt-3">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
+          <h3 className="text-lg font-medium text-slate-900 mb-4">
             Add Work Review
           </h3>
 
           {error && (
-            <div className="mb-4 bg-red-50 text-red-700 p-3 rounded text-sm">
+            <div className="mb-4 bg-rose-50 text-rose-700 p-3 rounded-lg text-sm border border-rose-200">
               {error}
             </div>
           )}
@@ -312,7 +324,7 @@ function WorkReviewForm({
               />
             </div>
 
-            <div className="bg-blue-50 p-3 rounded text-sm text-blue-700">
+            <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800 border border-blue-200">
               If you upload an image, it will be automatically analyzed by AI to provide feedback.
             </div>
 
@@ -320,14 +332,14 @@ function WorkReviewForm({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="px-4 py-2 border border-slate-300 rounded-lg shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-all"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                className="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 disabled:opacity-50 transition-all"
               >
                 {loading ? 'Analyzing...' : 'Create Review'}
               </button>
@@ -366,19 +378,19 @@ function WorkReviewDetail({
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white">
+    <div className="fixed inset-0 bg-slate-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div className="relative top-10 mx-auto p-5 border border-slate-200 w-full max-w-4xl shadow-2xl rounded-xl bg-white">
         <div className="mt-3">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-slate-900">
                 {review.student.firstName} {review.student.lastName}
               </h3>
-              <p className="text-sm text-gray-500">{formatDate(review.date)}</p>
+              <p className="text-sm text-slate-500">{formatDate(review.date)}</p>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-500"
+              className="text-slate-400 hover:text-slate-600 transition-colors"
             >
               <span className="text-2xl">&times;</span>
             </button>
@@ -386,7 +398,7 @@ function WorkReviewDetail({
 
           <div className="space-y-4">
             {review.imageUrl && (
-              <div className="relative h-96 bg-gray-100 rounded-lg overflow-hidden">
+              <div className="relative h-96 bg-slate-100 rounded-xl overflow-hidden">
                 <Image
                   src={review.imageUrl}
                   alt="Student work"
@@ -398,13 +410,13 @@ function WorkReviewDetail({
 
             {review.description && (
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Description</h4>
-                <p className="text-gray-700">{review.description}</p>
+                <h4 className="font-medium text-slate-900 mb-2">Description</h4>
+                <p className="text-slate-700">{review.description}</p>
               </div>
             )}
 
             {review.aiAnalysis && (
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="bg-blue-50 p-4 rounded-xl border border-blue-200">
                 <h4 className="font-medium text-blue-900 mb-2">AI Analysis</h4>
                 <div className="text-blue-800 whitespace-pre-wrap">
                   {review.aiAnalysis}
@@ -414,11 +426,11 @@ function WorkReviewDetail({
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <h4 className="font-medium text-gray-900">Your Notes</h4>
+                <h4 className="font-medium text-slate-900">Your Notes</h4>
                 {!editing && (
                   <button
                     onClick={() => setEditing(true)}
-                    className="text-sm text-blue-600 hover:text-blue-700"
+                    className="text-sm text-blue-700 hover:text-blue-800 font-medium"
                   >
                     Edit
                   </button>
@@ -430,7 +442,7 @@ function WorkReviewDetail({
                     rows={4}
                     value={tutorNotes}
                     onChange={(e) => setTutorNotes(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                   />
                   <div className="flex justify-end space-x-2">
                     <button
@@ -438,7 +450,7 @@ function WorkReviewDetail({
                         setTutorNotes(review.tutorNotes || '')
                         setEditing(false)
                       }}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                      className="px-3 py-1 text-sm border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition-all"
                     >
                       Cancel
                     </button>
@@ -447,14 +459,14 @@ function WorkReviewDetail({
                         handleUpdate()
                         setEditing(false)
                       }}
-                      className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                      className="px-3 py-1 text-sm bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg hover:from-blue-800 hover:to-blue-600 transition-all"
                     >
                       Save
                     </button>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-700">
+                <p className="text-slate-700">
                   {review.tutorNotes || 'No notes yet.'}
                 </p>
               )}
@@ -464,7 +476,7 @@ function WorkReviewDetail({
           <div className="mt-6 flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
+              className="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-all"
             >
               Close
             </button>

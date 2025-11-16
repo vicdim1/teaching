@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const userId = request.cookies.get('userId')?.value
+  const { pathname } = request.nextUrl
 
   // Public routes that don't require authentication
-  const publicRoutes = ['/login', '/register']
-  const isPublicRoute = publicRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  )
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password']
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
+
+  // Allow API routes to proceed without redirection
+  if (pathname.startsWith('/api/')) {
+    return NextResponse.next()
+  }
 
   // If user is not logged in and trying to access protected route
   if (!userId && !isPublicRoute) {
@@ -24,5 +28,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }

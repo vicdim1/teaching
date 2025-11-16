@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tutor CRM - Manage Students, Sessions & Invoices",
-  description: "A comprehensive CRM system for private tutors",
+  title: "The Classroom Mauritius - Student Management System",
+  description: "A comprehensive management system for The Classroom Mauritius",
 };
 
 export default function RootLayout({

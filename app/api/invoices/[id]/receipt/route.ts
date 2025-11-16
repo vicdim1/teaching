@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { sendInvoiceEmail } from '@/lib/email/invoice-email'
+import { sendReceiptEmail } from '@/lib/email/invoice-email'
 import { getMonthName } from '@/lib/utils'
 
 export async function POST(
@@ -35,6 +35,13 @@ export async function POST(
       )
     }
 
+    if (invoice.status !== 'paid' || !invoice.paidAt) {
+      return NextResponse.json(
+        { error: 'Invoice must be marked as paid before sending a receipt' },
+        { status: 400 }
+      )
+    }
+
     // Determine recipient email
     const recipientEmail =
       invoice.student.parentEmail || invoice.student.email
@@ -46,12 +53,12 @@ export async function POST(
       )
     }
 
-    // Send email
+    // Send receipt email
     const studentName = invoice.student.parentName
       ? `${invoice.student.parentName} (parent of ${invoice.student.firstName})`
       : `${invoice.student.firstName} ${invoice.student.lastName}`
 
-    await sendInvoiceEmail(
+    await sendReceiptEmail(
       recipientEmail,
       studentName,
       invoice.invoiceNumber,
@@ -59,23 +66,15 @@ export async function POST(
       invoice.year,
       invoice.totalHours,
       invoice.totalAmount,
+      invoice.paidAt,
       invoice.sessions
     )
 
-    // Update invoice status
-    await prisma.invoice.update({
-      where: { id },
-      data: {
-        status: 'sent',
-        sentAt: new Date(),
-      },
-    })
-
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error sending invoice:', error)
+    console.error('Error sending receipt:', error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Failed to send invoice email' },
+      { error: error instanceof Error ? error.message : 'Failed to send receipt email' },
       { status: 500 }
     )
   }

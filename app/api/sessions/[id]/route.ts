@@ -39,6 +39,18 @@ export async function PUT(
   try {
     const { id } = await params
     const body = await request.json()
+    
+    // Allow partial updates for status changes
+    if (body.status && Object.keys(body).length === 1) {
+      const session = await prisma.session.update({
+        where: { id },
+        data: { status: body.status },
+        include: { student: true },
+      })
+      return NextResponse.json(session)
+    }
+    
+    // Full validation for complete updates
     const validatedData = sessionSchema.parse(body)
 
     const session = await prisma.session.update({

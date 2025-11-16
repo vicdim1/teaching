@@ -1,13 +1,20 @@
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Check if API key is available
+const apiKey = process.env.OPENAI_API_KEY
+
+const openai = apiKey ? new OpenAI({
+  apiKey: apiKey,
+}) : null
 
 export async function analyzeStudentWork(
   imageBase64: string,
   description: string
 ): Promise<string> {
+  if (!openai) {
+    return 'AI analysis is not available. Please add an OpenAI API key to enable this feature.'
+  }
+
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',

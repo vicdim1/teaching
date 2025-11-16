@@ -5,9 +5,13 @@ export const studentSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email().optional().or(z.literal('')),
   phone: z.string().optional(),
+  gender: z.string().optional(),
+  class: z.string().optional(),
+  curriculum: z.string().optional(),
   parentName: z.string().optional(),
   parentEmail: z.string().email().optional().or(z.literal('')),
   parentPhone: z.string().optional(),
+  tuitionAddress: z.string().optional(),
   hourlyRate: z.number().min(0, 'Hourly rate must be positive'),
   grade: z.string().optional(),
   subject: z.string().optional(),
@@ -21,6 +25,7 @@ export const sessionSchema = z.object({
   duration: z.number().min(0.25, 'Duration must be at least 15 minutes'),
   subject: z.string().optional(),
   notes: z.string().optional(),
+  status: z.enum(['scheduled', 'completed', 'cancelled']).default('scheduled'),
 })
 
 export const workReviewSchema = z.object({

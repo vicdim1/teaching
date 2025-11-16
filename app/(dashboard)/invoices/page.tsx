@@ -105,6 +105,28 @@ export default function InvoicesPage() {
     }
   }
 
+  const handleSendReceipt = async (invoiceId: string) => {
+    if (!confirm('Send payment receipt by email?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/invoices/${invoiceId}/receipt`, {
+        method: 'POST',
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to send receipt')
+      }
+
+      alert('Receipt sent successfully!')
+    } catch (error) {
+      console.error('Error sending receipt:', error)
+      alert(error instanceof Error ? error.message : 'Failed to send receipt')
+    }
+  }
+
   const handleDelete = async (invoiceId: string) => {
     if (!confirm('Are you sure you want to delete this invoice? This will unlink the sessions but not delete them.')) {
       return
@@ -132,17 +154,28 @@ export default function InvoicesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen relative">
+      {/* Background Image - Professional Finance Theme */}
+      <div className="fixed inset-0 z-0">
+        <img
+          src="https://images.unsplash.com/photo-1554224311-beee460c201f?w=1920&q=80"
+          alt="Professional Business"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-900/70 via-slate-900/70 to-blue-900/60"></div>
+      </div>
+
+      <div className="relative z-10 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Invoices</h1>
-          <p className="mt-2 text-gray-600">
+          <h1 className="text-3xl font-bold text-white drop-shadow-lg">Invoices</h1>
+          <p className="mt-2 text-amber-50 drop-shadow">
             Generate and manage invoices for your students.
           </p>
         </div>
         <button
           onClick={() => setShowGenerateForm(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 transition-all"
         >
           <Plus className="w-4 h-4 mr-2" />
           Generate Invoice
@@ -150,18 +183,20 @@ export default function InvoicesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white/95 backdrop-blur-md overflow-hidden shadow-2xl rounded-xl border border-white/30">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Clock className="h-6 w-6 text-orange-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-700 rounded-xl flex items-center justify-center shadow-lg">
+                  <Clock className="h-6 w-6 text-white" />
+                </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-slate-600 truncate">
                     Pending Amount
                   </dt>
-                  <dd className="text-2xl font-semibold text-gray-900">
+                  <dd className="text-2xl font-semibold text-amber-700">
                     {formatCurrency(totalPending)}
                   </dd>
                 </dl>
@@ -170,18 +205,20 @@ export default function InvoicesPage() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
+        <div className="bg-white/95 backdrop-blur-md overflow-hidden shadow-2xl rounded-xl border border-white/30">
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <Check className="h-6 w-6 text-green-600" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center shadow-lg">
+                  <Check className="h-6 w-6 text-white" />
+                </div>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">
+                  <dt className="text-sm font-medium text-slate-600 truncate">
                     Total Paid
                   </dt>
-                  <dd className="text-2xl font-semibold text-gray-900">
+                  <dd className="text-2xl font-semibold text-emerald-700">
                     {formatCurrency(totalPaid)}
                   </dd>
                 </dl>
@@ -202,65 +239,65 @@ export default function InvoicesPage() {
         />
       )}
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white/95 backdrop-blur-md shadow-2xl overflow-hidden sm:rounded-xl border border-white/30">
+        <table className="min-w-full divide-y divide-slate-200">
+          <thead className="bg-gradient-to-r from-white/60 to-amber-50/60 backdrop-blur-sm">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Invoice #
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Student
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Period
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Hours
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Amount
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-slate-100">
             {invoices.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
                   No invoices yet. Generate your first invoice to get started.
                 </td>
               </tr>
             ) : (
               invoices.map((invoice) => (
-                <tr key={invoice.id}>
+                <tr key={invoice.id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-mono text-gray-900">
+                    <div className="text-sm font-mono text-slate-900">
                       {invoice.invoiceNumber}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-slate-900">
                       {invoice.student.firstName} {invoice.student.lastName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-sm text-slate-900">
                       {getMonthName(invoice.month)} {invoice.year}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                    <div className="text-sm text-slate-900">
                       {invoice.totalHours}h
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
+                    <div className="text-sm font-medium text-amber-700">
                       {formatCurrency(invoice.totalAmount)}
                     </div>
                   </td>
@@ -268,10 +305,10 @@ export default function InvoicesPage() {
                     <span
                       className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         invoice.status === 'paid'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-emerald-100 text-emerald-800'
                           : invoice.status === 'sent'
                           ? 'bg-blue-100 text-blue-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                          : 'bg-amber-100 text-amber-800'
                       }`}
                     >
                       {invoice.status}
@@ -281,7 +318,7 @@ export default function InvoicesPage() {
                     {invoice.status !== 'sent' && invoice.status !== 'paid' && (
                       <button
                         onClick={() => handleSendInvoice(invoice.id)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-blue-700 hover:text-blue-900"
                         title="Send by email"
                       >
                         <Send className="w-4 h-4" />
@@ -290,15 +327,24 @@ export default function InvoicesPage() {
                     {invoice.status !== 'paid' && (
                       <button
                         onClick={() => handleMarkPaid(invoice.id)}
-                        className="text-green-600 hover:text-green-900"
+                        className="text-emerald-600 hover:text-emerald-900"
                         title="Mark as paid"
                       >
                         <Check className="w-4 h-4" />
                       </button>
                     )}
+                    {invoice.status === 'paid' && (
+                      <button
+                        onClick={() => handleSendReceipt(invoice.id)}
+                        className="text-blue-700 hover:text-blue-900"
+                        title="Send receipt"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(invoice.id)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-rose-600 hover:text-rose-900"
                       title="Delete invoice"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -309,6 +355,7 @@ export default function InvoicesPage() {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   )
@@ -357,22 +404,22 @@ function GenerateInvoiceForm({
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+    <div className="fixed inset-0 bg-slate-900 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div className="relative top-20 mx-auto p-5 border border-slate-200 w-full max-w-md shadow-2xl rounded-xl bg-white">
         <div className="mt-3">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
+          <h3 className="text-lg font-medium text-slate-900 mb-4">
             Generate Invoice
           </h3>
 
           {error && (
-            <div className="mb-4 bg-red-50 text-red-700 p-3 rounded text-sm">
+            <div className="mb-4 bg-rose-50 text-rose-700 p-3 rounded-lg text-sm border border-rose-200">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-slate-700">
                 Student *
               </label>
               <select
@@ -381,7 +428,7 @@ function GenerateInvoiceForm({
                 onChange={(e) =>
                   setFormData({ ...formData, studentId: e.target.value })
                 }
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
               >
                 <option value="">Select a student</option>
                 {students.map((student) => (
@@ -394,7 +441,7 @@ function GenerateInvoiceForm({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-slate-700">
                   Month *
                 </label>
                 <select
@@ -403,7 +450,7 @@ function GenerateInvoiceForm({
                   onChange={(e) =>
                     setFormData({ ...formData, month: parseInt(e.target.value) })
                   }
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                 >
                   {Array.from({ length: 12 }, (_, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -414,7 +461,7 @@ function GenerateInvoiceForm({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-slate-700">
                   Year *
                 </label>
                 <select
@@ -423,7 +470,7 @@ function GenerateInvoiceForm({
                   onChange={(e) =>
                     setFormData({ ...formData, year: parseInt(e.target.value) })
                   }
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
                 >
                   {Array.from({ length: 5 }, (_, i) => {
                     const year = new Date().getFullYear() - 2 + i
@@ -437,7 +484,7 @@ function GenerateInvoiceForm({
               </div>
             </div>
 
-            <div className="bg-blue-50 p-3 rounded text-sm text-blue-700">
+            <div className="bg-blue-50 p-3 rounded-lg text-sm text-blue-800 border border-blue-200">
               This will collect all uninvoiced sessions for the selected student and period.
             </div>
 
@@ -445,14 +492,14 @@ function GenerateInvoiceForm({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                className="px-4 py-2 border border-slate-300 rounded-lg shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-all"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                className="px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-900 to-blue-700 hover:from-blue-800 hover:to-blue-600 disabled:opacity-50 transition-all"
               >
                 {loading ? 'Generating...' : 'Generate Invoice'}
               </button>
