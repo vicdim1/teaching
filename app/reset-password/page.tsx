@@ -1,5 +1,6 @@
 'use client'
 
+// Reset password page with Suspense boundary for Next.js SSR compatibility
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
