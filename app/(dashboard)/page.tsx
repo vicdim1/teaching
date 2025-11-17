@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { formatCurrency } from '@/lib/utils'
 import { Users, Calendar, DollarSign, FileText, TrendingUp, Clock, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { getSession } from '@/lib/auth'
 
 async function getDashboardStats() {
@@ -82,12 +83,18 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Background Image */}
-      <div className="fixed inset-0 z-0">
-        <img
+      {/* Background Image - Optimized */}
+      <div className="fixed inset-0 z-0 bg-slate-900">
+        <Image
           src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=80"
           alt="Books and Learning"
-          className="w-full h-full object-cover"
+          fill
+          priority
+          quality={85}
+          sizes="100vw"
+          className="object-cover"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-slate-800/70 to-blue-800/60"></div>
       </div>
