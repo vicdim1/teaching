@@ -16,31 +16,42 @@ async function createUsers() {
       existingUsers.forEach(u => console.log(`   - ${u.email} (${u.name})`))
     }
     
-    // Create your wife's account (main tutor)
-    const wifeEmail = 'vichaar.dimlaye@gmail.com'
+    // Create your wife's tutor account
+    const wifeEmail = 'theclassroommru@gmail.com'
+    const wifePassword = 'classroom2025!' // Temporary password - she should change it
     const wifeUser = await prisma.user.findUnique({ where: { email: wifeEmail } })
     
     if (!wifeUser) {
-      const hashedPassword = await bcrypt.hash('password123', 10)
+      const hashedPassword = await bcrypt.hash(wifePassword, 10)
       await prisma.user.create({
         data: {
           email: wifeEmail,
           password: hashedPassword,
-          name: 'Vichaar Dimlaye'
+          name: 'The Classroom Mauritius'
         }
       })
       console.log(`\n✅ Created tutor account: ${wifeEmail}`)
     } else {
       console.log(`\n✅ Tutor account already exists: ${wifeEmail}`)
+      console.log(`   Updating password to: ${wifePassword}`)
+      const hashedPassword = await bcrypt.hash(wifePassword, 10)
+      await prisma.user.update({
+        where: { email: wifeEmail },
+        data: { 
+          password: hashedPassword,
+          name: 'The Classroom Mauritius'
+        }
+      })
+      console.log(`✅ Password updated successfully!`)
     }
     
     // Create your administrator account
-    // REPLACE THIS EMAIL WITH YOUR EMAIL
-    const adminEmail = 'admin@theclassroom.mu' // <-- CHANGE THIS TO YOUR EMAIL
+    const adminEmail = 'vichaar.dimlaye@gmail.com'
+    const adminPassword = 'testpass1234!'
     const adminExists = await prisma.user.findUnique({ where: { email: adminEmail } })
     
     if (!adminExists) {
-      const hashedPassword = await bcrypt.hash('admin123', 10) // <-- CHANGE THIS PASSWORD
+      const hashedPassword = await bcrypt.hash(adminPassword, 10)
       await prisma.user.create({
         data: {
           email: adminEmail,
@@ -51,17 +62,25 @@ async function createUsers() {
       console.log(`✅ Created admin account: ${adminEmail}`)
     } else {
       console.log(`✅ Admin account already exists: ${adminEmail}`)
+      console.log(`   Updating password to: ${adminPassword}`)
+      const hashedPassword = await bcrypt.hash(adminPassword, 10)
+      await prisma.user.update({
+        where: { email: adminEmail },
+        data: { password: hashedPassword }
+      })
+      console.log(`✅ Password updated successfully!`)
     }
     
     console.log('\n🎉 User setup complete!')
     console.log('\n📋 Login Credentials:')
-    console.log('\n👩‍🏫 Tutor Account:')
-    console.log(`   Email: ${wifeEmail}`)
-    console.log(`   Password: password123`)
-    console.log('\n👨‍💼 Administrator Account:')
+    console.log('\n�‍💼 Administrator Account (You):')
     console.log(`   Email: ${adminEmail}`)
-    console.log(`   Password: admin123`)
-    console.log('\n⚠️  IMPORTANT: Change these passwords after first login!')
+    console.log(`   Password: ${adminPassword}`)
+    console.log('\n�‍🏫 Tutor Account (Your Wife):')
+    console.log(`   Email: ${wifeEmail}`)
+    console.log(`   Password: ${wifePassword}`)
+    console.log('\n⚠️  IMPORTANT: Have your wife change her password after first login!')
+    console.log('   Use the "Forgot Password" link on the login page.')
     
   } catch (error) {
     console.error('\n❌ Error:', error.message)
