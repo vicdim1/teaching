@@ -6,7 +6,8 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Public routes that don't require authentication
-  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password']
+  // Note: /register removed - registration disabled for private platform
+  const publicRoutes = ['/login', '/forgot-password', '/reset-password']
   const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route))
 
   // Allow API routes to proceed without redirection

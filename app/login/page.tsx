@@ -149,14 +149,7 @@ export default function LoginPage() {
             </form>
           </div>
 
-          <div className="px-8 py-4 bg-blue-50/50 border-t border-blue-100/50">
-            <p className="text-center text-sm text-slate-600">
-              First time?{' '}
-              <a href="/register" className="font-medium text-blue-700 hover:text-blue-800">
-                Create an account
-              </a>
-            </p>
-          </div>
+          {/* Registration removed - Private platform for authorized users only */}
         </div>
       </div>
     </div>

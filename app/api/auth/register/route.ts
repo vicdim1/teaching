@@ -4,6 +4,13 @@ import { hashPassword, createSession } from '@/lib/auth'
 import { registerSchema } from '@/lib/validations'
 
 export async function POST(request: Request) {
+  // Registration disabled - Private platform
+  return NextResponse.json(
+    { error: 'Registration is disabled. Please contact the administrator.' },
+    { status: 403 }
+  )
+  
+  /* Original registration code disabled
   try {
     const body = await request.json()
     const validatedData = registerSchema.parse(body)
@@ -47,4 +54,5 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
+  */
 }
